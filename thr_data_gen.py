@@ -2,6 +2,7 @@
 import random
 import time
 import string
+import argparse
 from json import dumps
 from kafka import KafkaProducer
 
@@ -11,11 +12,13 @@ PARSER = argparse.ArgumentParser(description="A program that generates data simi
 PARSER.add_argument("-t", "--topic",     	 help="the name of the kafka topic to write to", default="thr")
 PARSER.add_argument("-i", "--kafka-ip",   	 help="the IPv4 address of the host running kafka", default="localhost")
 PARSER.add_argument("-p", "--kafka-port", 	 help="the port listening for kafka messages on the host running kafka", default="9092")
-PARSER.add_argument("-u", "--unqiue-device-ids", help="the number of unique device ids", default="200000")
+PARSER.add_argument("-u", "--unique-device-ids", help="the number of unique device ids", default="200000")
 
 # parse args and store in dict()
 ARGV = PARSER.parse_args()
 argv = vars(ARGV)
+
+print(argv)
 
 # do some argument error handling here
 
@@ -27,7 +30,7 @@ producer = KafkaProducer(bootstrap_servers=bootstrap_servers_, value_serializer=
 
 thrity_days = range(30*24*60*60)
 event = ["PUT","POST","GET", "DELETE"]
-device_id = segs = [''.join(random.choices(string.ascii_letters + string.digits, k=16)) for _ in range(argv["unique_device_ids"])]
+device_id = [''.join(random.choices(string.ascii_letters + string.digits, k=16)) for _ in range(int(argv["unique_device_ids"]))]
 bytes_sent = range(0,100_000)
 severity = range(1,6)
 
